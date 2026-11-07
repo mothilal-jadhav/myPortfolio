@@ -1,5 +1,5 @@
 # Architecutral plan for this portfolio
-##Public portfolio
+## Public portfolio
 No authentication required
 - Home page
 - About me
@@ -9,7 +9,7 @@ No authentication required
 - Education
 - Contact information
 
-##Admin dashboard
+## Admin dashboard
 Authentication required
 - Login
 - Manage projects
