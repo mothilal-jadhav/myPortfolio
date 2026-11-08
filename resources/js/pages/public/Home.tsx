@@ -1,10 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
+/* ------------------------------------------------------------------
+   TYPES
+------------------------------------------------------------------- */
+interface Project {
+  title: string;
+  tag: string;
+  desc: string;
+  link: string;
+  hue: number;
+}
+
+interface Skill {
+  icon: IconName;
+  title: string;
+  desc: string;
+  items: string[];
+}
+
+interface ExperienceItem {
+  period: string;
+  role: string;
+  org: string;
+  desc: string;
+}
 
 /* ------------------------------------------------------------------
    CONTENT — edit these arrays; the layout updates automatically.
 ------------------------------------------------------------------- */
-const projects = [
+const projects: Project[] = [
   {
     title: "Currency Converter",
     tag: "React",
@@ -21,7 +45,7 @@ const projects = [
   },
 ];
 
-const skills = [
+const skills: Skill[] = [
   {
     icon: "code",
     title: "Frontend",
@@ -48,18 +72,12 @@ const skills = [
   },
 ];
 
-const experience = [
+const experience: ExperienceItem[] = [
   {
-    period: "2025 — Present",
+    period: "Aug,2026 — Present",
     role: "Your Role",
     org: "Ethika AI",
-    desc: "Describe what you work on, the impact you've had and the tools you use.",
-  },
-  {
-    period: "2024",
-    role: "freeCodeCamp Certification",
-    org: "Responsive Web Design",
-    desc: "Built a series of projects covering semantic HTML, CSS layout and accessibility.",
+    desc: "Full Stack Developer",
   },
 ];
 
@@ -69,7 +87,7 @@ const links = {
   email: "mothilal@ethika.co.in",
 };
 
-const navItems = [
+const navItems: [id: string, label: string][] = [
   ["welcome-section", "Home"],
   ["about", "About"],
   ["skills", "Skills"],
@@ -90,58 +108,42 @@ const ICONS = {
   mail: "M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z",
   github: "M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z",
   linkedin: "M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14Zm-.5 15.5v-5.3a3.3 3.3 0 0 0-3.3-3.3c-.9 0-1.9.5-2.4 1.3V10h-2.8v8.5h2.8v-5a1.4 1.4 0 0 1 2.8 0v5h2.9ZM6.9 8.4a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4Zm1.4 10.1V10H5.5v8.5h2.8Z",
-};
+} as const;
 
-const Icon = ({ name }) => (
+type IconName = keyof typeof ICONS;
+
+const Icon = ({ name }: { name: IconName }) => (
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d={ICONS[name]} />
   </svg>
 );
 
 /* ------------------------------------------------------------------
-   PROJECT COVERFLOW
+   PROJECT COVERFLOW (static — first project shown in front)
 ------------------------------------------------------------------- */
+const ACTIVE_PROJECT = 0;
+
+const tileStyle = (i: number, hue: number): CSSProperties => {
+  const offset = i - ACTIVE_PROJECT;
+  const abs = Math.abs(offset);
+  const rotate = offset === 0 ? 0 : offset > 0 ? -38 : 38;
+  return {
+    transform: `translate(-50%, -50%) translateX(${offset * 62}%) translateZ(${-abs * 160}px) rotateY(${rotate}deg) scale(${offset === 0 ? 1 : 0.86})`,
+    zIndex: 100 - abs,
+    opacity: abs > 3 ? 0 : 1 - abs * 0.2,
+    "--hue": hue,
+  } as CSSProperties;
+};
+
+const initials = (title: string): string =>
+  title
+    .split(" ")
+    .map((w) => w[0])
+    .join("");
+
 function Coverflow() {
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const touchX = useRef(null);
-  const count = projects.length;
-
-  const go = (dir) => setActive((a) => (a + dir + count) % count);
-
-  useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % count), 3200);
-    return () => clearInterval(id);
-  }, [playing, count]);
-
-  const tileStyle = (i) => {
-    const offset = i - active;
-    const abs = Math.abs(offset);
-    const rotate = offset === 0 ? 0 : offset > 0 ? -38 : 38;
-    return {
-      transform: `translate(-50%, -50%) translateX(${offset * 62}%) translateZ(${-abs * 160}px) rotateY(${rotate}deg) scale(${offset === 0 ? 1 : 0.86})`,
-      zIndex: 100 - abs,
-      opacity: abs > 3 ? 0 : 1 - abs * 0.2,
-    };
-  };
-
   return (
-    <div
-      className="coverflow"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "ArrowLeft") go(-1);
-        if (e.key === "ArrowRight") go(1);
-      }}
-      onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
-      onTouchEnd={(e) => {
-        if (touchX.current === null) return;
-        const dx = e.changedTouches[0].clientX - touchX.current;
-        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-        touchX.current = null;
-      }}
-    >
+    <div className="coverflow">
       <div className="coverflow-stage">
         {projects.map((p, i) => (
           <a
@@ -149,17 +151,11 @@ function Coverflow() {
             href={p.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`project-tile${i === active ? " is-active" : ""}`}
-            style={{ ...tileStyle(i), "--hue": p.hue }}
-            onClick={(e) => {
-              if (i !== active) {
-                e.preventDefault();
-                setActive(i);
-              }
-            }}
+            className={`project-tile${i === ACTIVE_PROJECT ? " is-active" : ""}`}
+            style={tileStyle(i, p.hue)}
           >
             <div className="project-art">
-              <span>{p.title.split(" ").map((w) => w[0]).join("")}</span>
+              <span>{initials(p.title)}</span>
             </div>
             <div className="project-body">
               <span className="project-tag">{p.tag}</span>
@@ -172,23 +168,17 @@ function Coverflow() {
       </div>
 
       <div className="coverflow-controls">
-        <button className="control-btn" onClick={() => go(-1)} aria-label="Previous project">‹</button>
-        <button
-          className="control-btn"
-          onClick={() => setPlaying((p) => !p)}
-          aria-label={playing ? "Pause" : "Play"}
-        >
-          {playing ? "❚❚" : "▶"}
-        </button>
-        <button className="control-btn" onClick={() => go(1)} aria-label="Next project">›</button>
+        <button type="button" className="control-btn" aria-label="Previous project">‹</button>
+        <button type="button" className="control-btn" aria-label="Play">▶</button>
+        <button type="button" className="control-btn" aria-label="Next project">›</button>
       </div>
 
       <div className="indicators">
         {projects.map((p, i) => (
           <button
+            type="button"
             key={p.title}
-            className={`indicator${i === active ? " active" : ""}`}
-            onClick={() => setActive(i)}
+            className={`indicator${i === ACTIVE_PROJECT ? " active" : ""}`}
             aria-label={`Show ${p.title}`}
           />
         ))}
@@ -201,82 +191,26 @@ function Coverflow() {
    PAGE
 ------------------------------------------------------------------- */
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [current, setCurrent] = useState("welcome-section");
-
-  // Loading screen
-  useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 500);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Navbar shrink + active link highlight
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      let id = navItems[0][0];
-      for (const [sectionId] of navItems) {
-        const el = document.getElementById(sectionId);
-        if (el && el.offsetTop - 120 <= window.scrollY) id = sectionId;
-      }
-      setCurrent(id);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Fade-in on scroll
-  useEffect(() => {
-    const els = document.querySelectorAll(".reveal");
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("active");
-            io.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.15 }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
   return (
     <>
-      <div className={`loading-screen${loaded ? " hidden" : ""}`}>
-        <div className="loader" />
-      </div>
-
       {/* ---------- Navbar ---------- */}
-      <nav id="navbar" className={scrolled ? "scrolled" : ""}>
+      <nav id="navbar">
         <a href="#welcome-section" className="nav-logo">
           <Icon name="logo" />
           MOTHILAL
         </a>
 
-        <ul className={`nav-links${menuOpen ? " open" : ""}`}>
+        <ul className="nav-links">
           {navItems.map(([id, label]) => (
             <li key={id}>
-              <a
-                href={`#${id}`}
-                className={current === id ? "active" : ""}
-                onClick={() => setMenuOpen(false)}
-              >
+              <a href={`#${id}`} className={id === "welcome-section" ? "active" : ""}>
                 {label}
               </a>
             </li>
           ))}
         </ul>
 
-        <button
-          className={`menu-toggle${menuOpen ? " open" : ""}`}
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
+        <button type="button" className="menu-toggle" aria-label="Toggle menu">
           <span />
           <span />
           <span />
@@ -291,7 +225,7 @@ export default function Home() {
           <div className="hero-shape shape-2" />
           <div className="hero-shape shape-3" />
 
-          <div className="hero-content reveal">
+          <div className="hero-content">
             <p className="eyebrow">Hello, I'm</p>
             <h1>Mothilal</h1>
             <p className="hero-subtitle">Developer · Building with React &amp; Responsible AI</p>
@@ -308,7 +242,7 @@ export default function Home() {
 
         {/* ---------- About ---------- */}
         <section id="about" className="section alt">
-          <div className="about-grid reveal">
+          <div className="about-grid">
             <div className="about-visual">
               <div className="avatar">M</div>
             </div>
@@ -343,11 +277,11 @@ export default function Home() {
 
         {/* ---------- Skills ---------- */}
         <section id="skills" className="section">
-          <header className="section-header reveal">
+          <header className="section-header">
             <p className="kicker">What I Work With</p>
             <h2 className="section-title">Skills</h2>
           </header>
-          <div className="card-grid reveal">
+          <div className="card-grid">
             {skills.map((s) => (
               <article key={s.title} className="skill-card">
                 <div className="icon-badge">
@@ -367,25 +301,23 @@ export default function Home() {
 
         {/* ---------- Projects ---------- */}
         <section id="project-section" className="section alt">
-          <header className="section-header reveal">
+          <header className="section-header">
             <p className="kicker">Selected Work</p>
             <h2 className="section-title">Projects</h2>
-            <p className="section-subtitle">
-              Use the arrows, swipe, or click a card to browse.
-            </p>
+            <p className="section-subtitle">A few things I've built recently.</p>
           </header>
           <Coverflow />
         </section>
 
         {/* ---------- Experience ---------- */}
         <section id="experience" className="section">
-          <header className="section-header reveal">
+          <header className="section-header">
             <p className="kicker">My Journey</p>
             <h2 className="section-title">Experience</h2>
           </header>
           <ol className="timeline">
             {experience.map((x) => (
-              <li key={x.role + x.org} className="reveal">
+              <li key={x.role + x.org}>
                 <span className="period">{x.period}</span>
                 <h3>{x.role}</h3>
                 <p className="org">{x.org}</p>
@@ -397,14 +329,14 @@ export default function Home() {
 
         {/* ---------- Contact ---------- */}
         <section id="contact" className="section alt">
-          <header className="section-header reveal">
+          <header className="section-header">
             <p className="kicker">Get In Touch</p>
             <h2 className="section-title">Let's talk</h2>
             <p className="section-subtitle">
               Have an idea or a role in mind? I'd love to hear about it.
             </p>
           </header>
-          <div className="contact-grid reveal">
+          <div className="contact-grid">
             <a href={`mailto:${links.email}`} className="contact-card">
               <div className="icon-badge"><Icon name="mail" /></div>
               <span className="contact-label">Email</span>
