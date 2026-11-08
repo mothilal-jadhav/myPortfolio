@@ -1,6 +1,17 @@
-import {Link} from '@inertiajs/react';
+import {Link, useForm} from '@inertiajs/react';
 
 export default function Login() {
+    const { data, setData, post, processing, errors } = useForm({
+        email: '',
+        password: '',
+    });
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        post('/login');
+    }
+
     return (
         <main className="admin-login">
             <Link href="/" className="btn btn-ghost back-home">
@@ -10,13 +21,14 @@ export default function Login() {
                 <h1>Login</h1>
                 <p>Sign in to manage your portfolio</p>
                 
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
                             type="email"
                             id="email"
-                            name="email"
+                            value={data.email}
+                            onChange={(e)=>setData('email', e.target.value)}
                             placeholder="Enter your email"
                         />
                     </div>
@@ -26,13 +38,15 @@ export default function Login() {
                         <input
                             type="password"
                             id="password"
-                            name="password"
+                            value={data.password}
+                            onChange={(e)=>setData('password',e.target.value)}
                             placeholder="Enter your password"
                         />
+                        {errors.password && (<p className='error'>{errors.password}</p>)}
                     </div>
 
-                    <button type="submit" className="btn btn-solid">
-                        Sign In
+                    <button type="submit" className="btn btn-solid" disabled={processing}>
+                        {processing ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
             </div>

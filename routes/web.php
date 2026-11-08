@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,3 +11,5 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('admin/auth/Login');
 })->name('login');
+
+Route::post('/login', [LoginController::class,'store'])->name('login.store');
