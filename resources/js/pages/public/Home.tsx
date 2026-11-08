@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Link } from '@inertiajs/react';
 
 /* ------------------------------------------------------------------
    TYPES
@@ -210,14 +211,14 @@ export default function Home() {
           ))}
         </ul>
 
-        <a
-            href="#"
+        <Link
+            href="/login"
             className="
             btn btn-ghost
             "
         >
             Login
-        </a>
+        </Link>
 
         <button type="button" className="menu-toggle" aria-label="Toggle menu">
           <span />
