@@ -210,6 +210,15 @@ export default function Home() {
           ))}
         </ul>
 
+        <a
+            href="#"
+            className="
+            btn btn-ghost
+            "
+        >
+            Login
+        </a>
+
         <button type="button" className="menu-toggle" aria-label="Toggle menu">
           <span />
           <span />
@@ -227,7 +236,7 @@ export default function Home() {
 
           <div className="hero-content">
             <p className="eyebrow">Hello, I'm</p>
-            <h1>Mothilal</h1>
+            <h1>Mothilal Jadhav</h1>
             <p className="hero-subtitle">Developer · Building with React &amp; Responsible AI</p>
             <div className="hero-actions">
               <a href="#project-section" className="btn btn-solid">View My Work</a>
