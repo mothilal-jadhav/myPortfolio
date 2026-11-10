@@ -1,62 +1,309 @@
 import { Link } from '@inertiajs/react';
 
+type IconName = 'grid' | 'folder' | 'layers' | 'briefcase' | 'graduation' | 'settings' | 'external' | 'arrow-up-right' | 'plus' | 'clock' | 'check' | 'sparkles';
+
+const iconPaths: Record<IconName, string> = {
+    grid: 'M3 3h7v7H3z M14 3h7v7h-7z M14 14h7v7h-7z M3 14h7v7H3z',
+    folder: 'M3 7.5A1.5 1.5 0 0 1 4.5 6H10l2 2h7.5A1.5 1.5 0 0 1 21 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z',
+    layers: 'm12 3 9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 16l9 5 9-5',
+    briefcase: 'M3 8h18v12H3z M8 8V5h8v3 M3 13h18 M10 13v2h4v-2',
+    graduation: 'm2 9 10-5 10 5-10 5L2 9z M6 11v5c3.5 2.5 8.5 2.5 12 0v-5 M22 9v6',
+    settings: 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 3.1-.2-.1a1.7 1.7 0 0 0-1.8.1l-.2.1h-3.6l-.1-.2a1.7 1.7 0 0 0-1.6-1l-.2.1-3.1-1.8.1-.2a1.7 1.7 0 0 0-.1-1.8l-.1-.2v-3.6l.2-.1a1.7 1.7 0 0 0 1-1.6l-.1-.2 1.8-3.1.2.1a1.7 1.7 0 0 0 1.8-.1l.2-.1h3.6l.1.2a1.7 1.7 0 0 0 1.6 1l.2-.1 3.1 1.8-.1.2a1.7 1.7 0 0 0 .1 1.8l.1.2v3.6z',
+    external: 'M14 3h7v7 M21 3l-9 9 M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6',
+    'arrow-up-right': 'M7 17 17 7 M7 7h10v10',
+    plus: 'M12 5v14 M5 12h14',
+    clock: 'M12 8v4l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+    check: 'm5 12 4 4L19 6',
+    sparkles: 'm12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z M19 14l1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14z',
+};
+
+function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
+    return (
+        <svg
+            aria-hidden="true"
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d={iconPaths[name]} />
+        </svg>
+    );
+}
+
+const navigation = [
+    { label: 'Dashboard', icon: 'grid' as const, active: true },
+    { label: 'Projects', icon: 'folder' as const },
+    { label: 'Skills', icon: 'layers' as const },
+    { label: 'Experience', icon: 'briefcase' as const },
+    { label: 'Education', icon: 'graduation' as const },
+];
+
+const metrics = [
+    {
+        label: 'Total projects',
+        value: '00',
+        note: 'Published on your portfolio',
+        icon: 'folder' as const,
+        trend: 'Content overview',
+    },
+    {
+        label: 'Skills listed',
+        value: '00',
+        note: 'Technologies and capabilities',
+        icon: 'layers' as const,
+        trend: 'Content overview',
+    },
+    {
+        label: 'Experience entries',
+        value: '00',
+        note: 'Roles and work history',
+        icon: 'briefcase' as const,
+        trend: 'Content overview',
+    },
+];
+
 export default function Dashboard() {
     return (
         <main className="admin-dashboard">
             <aside className="admin-sidebar">
-                <h2>My Portfolio</h2>
+                <Link href="/admin/dashboard" className="admin-brand">
+                    <span className="admin-brand-mark">
+                        <Icon name="sparkles" size={21} />
+                    </span>
+                    <span>
+                        <strong>MY PORTFOLIO</strong>
+                        <small>CONTENT STUDIO</small>
+                    </span>
+                </Link>
 
-                <nav>
-                    <Link href="/admin/dashboard" className="active">
-                        Dashboard
-                    </Link>
-
-                    <a href="#">Projects</a>
-                    <a href="#">Skills</a>
-                    <a href="#">Experience</a>
-                    <a href="#">Settings</a>
+                <div className="admin-nav-label">WORKSPACE</div>
+                <nav className="admin-nav" aria-label="Admin navigation">
+                    {navigation.map((item) =>
+                        item.active ? (
+                            <Link
+                                key={item.label}
+                                href="/admin/dashboard"
+                                className="admin-nav-item active"
+                                aria-current="page"
+                            >
+                                <Icon name={item.icon} />
+                                <span>{item.label}</span>
+                            </Link>
+                        ) : (
+                            <div
+                                key={item.label}
+                                className="admin-nav-item disabled"
+                                aria-disabled="true"
+                                title="Available in a later step"
+                            >
+                                <Icon name={item.icon} />
+                                <span>{item.label}</span>
+                                <span className="nav-soon">SOON</span>
+                            </div>
+                        ),
+                    )}
                 </nav>
+
+                <div className="admin-sidebar-bottom">
+                    <div className="admin-nav-label">PREFERENCES</div>
+                    <div className="admin-nav-item disabled" aria-disabled="true">
+                        <Icon name="settings" />
+                        <span>Settings</span>
+                        <span className="nav-soon">SOON</span>
+                    </div>
+
+                    <div className="sidebar-profile">
+                        <div className="profile-avatar">A</div>
+                        <div className="profile-copy">
+                            <strong>Administrator</strong>
+                            <span>Portfolio owner</span>
+                        </div>
+                        <span className="profile-status" title="Signed in" />
+                    </div>
+                </div>
             </aside>
 
             <section className="admin-main">
-                <header className="admin-header">
-                    <div>
-                        <h1>Dashboard</h1>
-                        <p>Manage your portfolio content.</p>
+                <header className="admin-topbar">
+                    <div className="breadcrumb">
+                        <span>Workspace</span>
+                        <span className="breadcrumb-divider">/</span>
+                        <strong>Dashboard</strong>
                     </div>
 
-                    <Link href="/" className="btn btn-ghost">
-                        View Portfolio
-                    </Link>
+                    <div className="topbar-actions">
+                        <span className="admin-status">
+                            <span />
+                            ADMIN MODE
+                        </span>
+                        <Link href="/" className="portfolio-link">
+                            View portfolio
+                            <Icon name="external" size={16} />
+                        </Link>
+                    </div>
                 </header>
 
-                <section className="dashboard-welcome">
-                    <h2>Welcome to your admin dashboard</h2>
-                    <p>
-                        This is where you will manage your portfolio
-                        information.
-                    </p>
-                </section>
+                <div className="admin-content">
+                    <section className="dashboard-heading">
+                        <div>
+                            <p className="dashboard-eyebrow">OVERVIEW</p>
+                            <h1>Dashboard</h1>
+                            <p className="dashboard-subtitle">
+                                Manage your portfolio content from one place.
+                            </p>
+                        </div>
+                        <div className="heading-date">
+                            <span className="date-dot" />
+                            Your workspace
+                        </div>
+                    </section>
 
-                <section className="dashboard-stats">
-                    <article className="stat-card">
-                        <h3>Projects</h3>
-                        <p>0</p>
-                        <span>Portfolio projects</span>
-                    </article>
+                    <section className="dashboard-welcome">
+                        <div className="welcome-decoration welcome-decoration-one" />
+                        <div className="welcome-decoration welcome-decoration-two" />
+                        <div className="welcome-copy">
+                            <span className="welcome-kicker">
+                                <Icon name="sparkles" size={15} />
+                                YOUR CREATIVE WORKSPACE
+                            </span>
+                            <h2>Make your work <span>stand out.</span></h2>
+                            <p>
+                                Your portfolio starts here. Add your projects, highlight
+                                your skills, and keep your professional story up to date.
+                            </p>
+                            <div className="welcome-footnote">
+                                <span className="welcome-footnote-icon">
+                                    <Icon name="check" size={14} />
+                                </span>
+                                Your admin workspace is ready
+                            </div>
+                        </div>
+                        <div className="welcome-graphic" aria-hidden="true">
+                            <div className="graphic-ring graphic-ring-outer" />
+                            <div className="graphic-ring graphic-ring-inner" />
+                            <div className="graphic-core">
+                                <Icon name="sparkles" size={42} />
+                            </div>
+                            <span className="graphic-orbit orbit-one" />
+                            <span className="graphic-orbit orbit-two" />
+                        </div>
+                    </section>
 
-                    <article className="stat-card">
-                        <h3>Skills</h3>
-                        <p>0</p>
-                        <span>Listed skills</span>
-                    </article>
+                    <section className="dashboard-section">
+                        <div className="dashboard-section-heading">
+                            <div>
+                                <h2>Content overview</h2>
+                                <p>A snapshot of the information in your portfolio.</p>
+                            </div>
+                            <span className="section-period">ALL TIME</span>
+                        </div>
 
-                    <article className="stat-card">
-                        <h3>Experience</h3>
-                        <p>0</p>
-                        <span>Experience entries</span>
-                    </article>
-                </section>
+                        <div className="dashboard-stats">
+                            {metrics.map((metric) => (
+                                <article className="stat-card" key={metric.label}>
+                                    <div className="stat-card-top">
+                                        <span className="stat-icon">
+                                            <Icon name={metric.icon} size={19} />
+                                        </span>
+                                        <span className="stat-context">{metric.trend}</span>
+                                    </div>
+                                    <p className="stat-value">{metric.value}</p>
+                                    <h3>{metric.label}</h3>
+                                    <p className="stat-note">{metric.note}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section className="dashboard-lower-grid">
+                        <article className="dashboard-panel activity-panel">
+                            <div className="panel-heading">
+                                <div>
+                                    <h2>Recent activity</h2>
+                                    <p>Keep track of changes to your portfolio.</p>
+                                </div>
+                                <span className="panel-heading-icon">
+                                    <Icon name="clock" size={18} />
+                                </span>
+                            </div>
+
+                            <div className="empty-activity">
+                                <span className="empty-activity-icon">
+                                    <Icon name="clock" size={23} />
+                                </span>
+                                <strong>No activity yet</strong>
+                                <p>
+                                    When you start updating your portfolio, your recent
+                                    activity will appear here.
+                                </p>
+                            </div>
+                        </article>
+
+                        <article className="dashboard-panel quick-panel">
+                            <div className="panel-heading">
+                                <div>
+                                    <h2>Quick actions</h2>
+                                    <p>Shortcuts for your next steps.</p>
+                                </div>
+                                <span className="panel-heading-icon">
+                                    <Icon name="arrow-up-right" size={18} />
+                                </span>
+                            </div>
+
+                            <div className="quick-action-list">
+                                <div className="quick-action-item">
+                                    <span className="quick-action-icon">
+                                        <Icon name="folder" size={18} />
+                                    </span>
+                                    <span className="quick-action-copy">
+                                        <strong>Add a project</strong>
+                                        <small>Showcase something you have built</small>
+                                    </span>
+                                    <span className="quick-action-plus">
+                                        <Icon name="plus" size={17} />
+                                    </span>
+                                </div>
+                                <div className="quick-action-item">
+                                    <span className="quick-action-icon">
+                                        <Icon name="layers" size={18} />
+                                    </span>
+                                    <span className="quick-action-copy">
+                                        <strong>Update your skills</strong>
+                                        <small>Highlight your technical stack</small>
+                                    </span>
+                                    <span className="quick-action-plus">
+                                        <Icon name="plus" size={17} />
+                                    </span>
+                                </div>
+                                <div className="quick-action-item">
+                                    <span className="quick-action-icon">
+                                        <Icon name="briefcase" size={18} />
+                                    </span>
+                                    <span className="quick-action-copy">
+                                        <strong>Add experience</strong>
+                                        <small>Keep your career history current</small>
+                                    </span>
+                                    <span className="quick-action-plus">
+                                        <Icon name="plus" size={17} />
+                                    </span>
+                                </div>
+                            </div>
+                            <p className="quick-actions-note">
+                                <span /> Actions will be enabled as we build each section.
+                            </p>
+                        </article>
+                    </section>
+
+                    <footer className="admin-footer">
+                        <span>MY PORTFOLIO <span className="footer-separator">/</span> ADMIN</span>
+                        <span>Built to keep your work in focus.</span>
+                    </footer>
+                </div>
             </section>
         </main>
     );
