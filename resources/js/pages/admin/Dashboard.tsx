@@ -1,5 +1,5 @@
-import AdminLayout from '@/layouts/AdminLayout';
-import type { PageWithLayout } from '@/types/page';
+import AdminLayout from '../../layouts/AdminLayout';
+import type { PageWithLayout } from '../../types/page';
 import type { ReactNode } from 'react';
 
 type IconName = 'grid' | 'folder' | 'layers' | 'briefcase' | 'graduation' | 'settings' | 'external' | 'arrow-up-right' | 'plus' | 'clock' | 'check' | 'sparkles';
