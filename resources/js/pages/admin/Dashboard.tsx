@@ -1,4 +1,6 @@
-import { Link, usePage } from '@inertiajs/react';
+import AdminLayout from '../../layouts/AdminLayout';
+import type { PageWithLayout } from '../../types/page';
+import type { ReactNode } from 'react';
 
 type IconName = 'grid' | 'folder' | 'layers' | 'briefcase' | 'graduation' | 'settings' | 'external' | 'arrow-up-right' | 'plus' | 'clock' | 'check' | 'sparkles';
 
@@ -35,14 +37,6 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
     );
 }
 
-const navigation = [
-    { label: 'Dashboard', icon: 'grid' as const, href:'/admin/dashborad' },
-    { label: 'Projects', icon: 'folder' as const, href:'/admin/projects' },
-    { label: 'Skills', icon: 'layers' as const },
-    { label: 'Experience', icon: 'briefcase' as const },
-    { label: 'Education', icon: 'graduation' as const },
-];
-
 const metrics = [
     {
         label: 'Total projects',
@@ -67,90 +61,10 @@ const metrics = [
     },
 ];
 
-export default function Dashboard() {
-    const { url } = usePage();
-    const currentPath = url.split('?')[0];
+const Dashboard: PageWithLayout = () => {
     return (
-        <main className="admin-dashboard">
-            <aside className="admin-sidebar">
-                <Link href="/admin/dashboard" className="admin-brand">
-                    <span className="admin-brand-mark">
-                        <Icon name="sparkles" size={21} />
-                    </span>
-                    <span>
-                        <strong>MY PORTFOLIO</strong>
-                        <small>CONTENT STUDIO</small>
-                    </span>
-                </Link>
-
-                <div className="admin-nav-label">WORKSPACE</div>
-                <nav className="admin-nav" aria-label="Admin navigation">
-                    {navigation.map((item) =>
-                        item.href ? (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                className={`admin-nav-item ${
-                                    currentPath === item.href ? 'active' : ''
-                                }`}
-                                aria-current={currentPath === item.href ? 'page' : undefined}
-                            >
-                                <Icon name={item.icon} />
-                                <span>{item.label}</span>
-                            </Link>
-                        ) : (
-                            <div
-                                key={item.label}
-                                className="admin-nav-item disabled"
-                                aria-disabled="true"
-                                title="Available in a later step"
-                            >
-                                <Icon name={item.icon} />
-                                <span>{item.label}</span>
-                                <span className="nav-soon">SOON</span>
-                            </div>
-                        ),
-                    )}
-                </nav>
-
-                <div className="admin-sidebar-bottom">
-                    <div className="admin-nav-label">PREFERENCES</div>
-                    <div className="admin-nav-item disabled" aria-disabled="true">
-                        <Icon name="settings" />
-                        <span>Settings</span>
-                        <span className="nav-soon">SOON</span>
-                    </div>
-
-                    <div className="sidebar-profile">
-                        <div className="profile-avatar">A</div>
-                        <div className="profile-copy">
-                            <strong>Administrator</strong>
-                            <span>Portfolio owner</span>
-                        </div>
-                        <span className="profile-status" title="Signed in" />
-                    </div>
-                </div>
-            </aside>
-
-            <section className="admin-main">
-                <header className="admin-topbar">
-                    <div className="breadcrumb">
-                        <span className="admin-status">
-                            <span />
-                            ADMIN MODE
-                        </span>
-                    </div>
-
-                    <div className="topbar-actions">
-                        
-                        <Link href="/" className="portfolio-link">
-                            View portfolio
-                            <Icon name="external" size={16} />
-                        </Link>
-                    </div>
-                </header>
-
-                <div className="admin-content">
+        <>
+            <div className="admin-content">
                     <section className="dashboard-heading">
                         <div>
                             <p className="dashboard-eyebrow">OVERVIEW</p>
@@ -273,7 +187,10 @@ export default function Dashboard() {
 
                     
                 </div>
-            </section>
-        </main>
+        </>
     );
 }
+
+Dashboard.layout = (page: ReactNode) => <AdminLayout>{page}</AdminLayout>;
+
+export default Dashboard;

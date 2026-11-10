@@ -2462,3 +2462,60 @@ footer {
         flex-direction: column;
     }
 }
+
+
+/* Persistent admin application shell */
+.admin-shell {
+    min-height: 100vh;
+    display: block;
+    background: var(--admin-bg);
+}
+.admin-shell .admin-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 200;
+    width: 258px;
+    min-width: 258px;
+    height: 100vh;
+    min-height: 0;
+    overflow-y: auto;
+}
+.admin-shell .admin-main {
+    min-width: 0;
+    min-height: 100vh;
+    margin-left: 258px;
+    padding: 76px 0 0;
+}
+.admin-shell .admin-topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 258px;
+    z-index: 150;
+    height: 76px;
+    min-height: 76px;
+    background: rgba(12, 12, 13, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+.admin-shell .admin-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+    .admin-shell .admin-sidebar { width: 225px; min-width: 225px; }
+    .admin-shell .admin-main { margin-left: 225px; }
+    .admin-shell .admin-topbar { left: 225px; }
+}
+@media (max-width: 760px) {
+    .admin-shell .admin-sidebar {
+        position: relative; inset: auto; width: 100%; min-width: 0;
+        height: auto; min-height: auto; overflow: visible;
+    }
+    .admin-shell .admin-main { margin-left: 0; padding-top: 0; }
+    .admin-shell .admin-topbar {
+        position: sticky; top: 0; right: auto; left: auto;
+        height: 62px; min-height: 62px;
+    }
+}

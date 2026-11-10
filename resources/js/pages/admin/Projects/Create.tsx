@@ -1,5 +1,7 @@
 import { Link, useForm } from "@inertiajs/react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
+import AdminLayout from "../../../layouts/AdminLayout";
+import type { PageWithLayout } from "../../../types/page";
 
 interface ProjectForm {
     title: string;
@@ -9,7 +11,7 @@ interface ProjectForm {
     hue: number;
 }
 
-export default function Create() {
+const Create: PageWithLayout = () => {
     const { data, setData, post, errors } = useForm<ProjectForm>({
         title: "",
         tag: "",
@@ -125,4 +127,8 @@ export default function Create() {
             </form>
         </div>
     );
-}
+};
+
+Create.layout = (page: ReactNode) => <AdminLayout>{page}</AdminLayout>;
+
+export default Create;

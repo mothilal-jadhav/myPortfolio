@@ -1,5 +1,7 @@
 
 import { Link } from "@inertiajs/react";
+import AdminLayout from "../../../layouts/AdminLayout";
+import type { PageWithLayout } from "../../../types/page";
 
 interface Project {
     id: number;
@@ -14,7 +16,7 @@ interface Props {
     projects: Project[];
 }
 
-export default function Index({ projects }: Props) {
+const Index: PageWithLayout<Props> = ({ projects }) => {
     return (
         <main className="admin-projects-page">
             <header className="projects-header">
@@ -101,4 +103,8 @@ export default function Index({ projects }: Props) {
             )}
         </main>
     );
-}
+};
+
+Index.layout = (page) => <AdminLayout>{page}</AdminLayout>;
+
+export default Index;
