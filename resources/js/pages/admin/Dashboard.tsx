@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 type IconName = 'grid' | 'folder' | 'layers' | 'briefcase' | 'graduation' | 'settings' | 'external' | 'arrow-up-right' | 'plus' | 'clock' | 'check' | 'sparkles';
 
@@ -36,8 +36,8 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
 }
 
 const navigation = [
-    { label: 'Dashboard', icon: 'grid' as const, active: true },
-    { label: 'Projects', icon: 'folder' as const },
+    { label: 'Dashboard', icon: 'grid' as const, href:'/admin/dashborad' },
+    { label: 'Projects', icon: 'folder' as const, href:'/admin/projects' },
     { label: 'Skills', icon: 'layers' as const },
     { label: 'Experience', icon: 'briefcase' as const },
     { label: 'Education', icon: 'graduation' as const },
@@ -68,6 +68,8 @@ const metrics = [
 ];
 
 export default function Dashboard() {
+    const { url } = usePage();
+    const currentPath = url.split('?')[0];
     return (
         <main className="admin-dashboard">
             <aside className="admin-sidebar">
@@ -84,12 +86,14 @@ export default function Dashboard() {
                 <div className="admin-nav-label">WORKSPACE</div>
                 <nav className="admin-nav" aria-label="Admin navigation">
                     {navigation.map((item) =>
-                        item.active ? (
+                        item.href ? (
                             <Link
                                 key={item.label}
-                                href="/admin/dashboard"
-                                className="admin-nav-item active"
-                                aria-current="page"
+                                href={item.href}
+                                className={`admin-nav-item ${
+                                    currentPath === item.href ? 'active' : ''
+                                }`}
+                                aria-current={currentPath === item.href ? 'page' : undefined}
                             >
                                 <Icon name={item.icon} />
                                 <span>{item.label}</span>
@@ -131,16 +135,14 @@ export default function Dashboard() {
             <section className="admin-main">
                 <header className="admin-topbar">
                     <div className="breadcrumb">
-                        <span>Workspace</span>
-                        <span className="breadcrumb-divider">/</span>
-                        <strong>Dashboard</strong>
-                    </div>
-
-                    <div className="topbar-actions">
                         <span className="admin-status">
                             <span />
                             ADMIN MODE
                         </span>
+                    </div>
+
+                    <div className="topbar-actions">
+                        
                         <Link href="/" className="portfolio-link">
                             View portfolio
                             <Icon name="external" size={16} />
@@ -154,7 +156,7 @@ export default function Dashboard() {
                             <p className="dashboard-eyebrow">OVERVIEW</p>
                             <h1>Dashboard</h1>
                             <p className="dashboard-subtitle">
-                                Manage your portfolio content from one place.
+                                Manage portfolio content from one place.
                             </p>
                         </div>
                         <div className="heading-date">
@@ -163,36 +165,7 @@ export default function Dashboard() {
                         </div>
                     </section>
 
-                    <section className="dashboard-welcome">
-                        <div className="welcome-decoration welcome-decoration-one" />
-                        <div className="welcome-decoration welcome-decoration-two" />
-                        <div className="welcome-copy">
-                            <span className="welcome-kicker">
-                                <Icon name="sparkles" size={15} />
-                                YOUR CREATIVE WORKSPACE
-                            </span>
-                            <h2>Make your work <span>stand out.</span></h2>
-                            <p>
-                                Your portfolio starts here. Add your projects, highlight
-                                your skills, and keep your professional story up to date.
-                            </p>
-                            <div className="welcome-footnote">
-                                <span className="welcome-footnote-icon">
-                                    <Icon name="check" size={14} />
-                                </span>
-                                Your admin workspace is ready
-                            </div>
-                        </div>
-                        <div className="welcome-graphic" aria-hidden="true">
-                            <div className="graphic-ring graphic-ring-outer" />
-                            <div className="graphic-ring graphic-ring-inner" />
-                            <div className="graphic-core">
-                                <Icon name="sparkles" size={42} />
-                            </div>
-                            <span className="graphic-orbit orbit-one" />
-                            <span className="graphic-orbit orbit-two" />
-                        </div>
-                    </section>
+                    
 
                     <section className="dashboard-section">
                         <div className="dashboard-section-heading">
@@ -225,7 +198,6 @@ export default function Dashboard() {
                             <div className="panel-heading">
                                 <div>
                                     <h2>Recent activity</h2>
-                                    <p>Keep track of changes to your portfolio.</p>
                                 </div>
                                 <span className="panel-heading-icon">
                                     <Icon name="clock" size={18} />
@@ -248,7 +220,7 @@ export default function Dashboard() {
                             <div className="panel-heading">
                                 <div>
                                     <h2>Quick actions</h2>
-                                    <p>Shortcuts for your next steps.</p>
+                                    
                                 </div>
                                 <span className="panel-heading-icon">
                                     <Icon name="arrow-up-right" size={18} />
@@ -299,10 +271,7 @@ export default function Dashboard() {
                         </article>
                     </section>
 
-                    <footer className="admin-footer">
-                        <span>MY PORTFOLIO <span className="footer-separator">/</span> ADMIN</span>
-                        <span>Built to keep your work in focus.</span>
-                    </footer>
+                    
                 </div>
             </section>
         </main>

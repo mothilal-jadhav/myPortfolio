@@ -35,7 +35,7 @@ const projects: Project[] = [
     tag: "React",
     desc: "A currency conversion application.",
     link: "#",
-    hue: 32,
+    hue: 44,
   },
   {
     title: "Tic Tac Toe",
