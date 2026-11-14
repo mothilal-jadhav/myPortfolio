@@ -9,7 +9,7 @@ export default function Login() {
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        post('/login');
+        post('/login', { onFinish: () => setData('password', '') });
     }
 
     return (
@@ -30,7 +30,12 @@ export default function Login() {
                             value={data.email}
                             onChange={(e)=>setData('email', e.target.value)}
                             placeholder="Enter your email"
+                            autoComplete="username"
+                            autoFocus
+                            required
+                            aria-invalid={errors.email ? true : undefined}
                         />
+                        {errors.email && (<p className='error' role="alert">{errors.email}</p>)}
                     </div>
 
                     <div className="form-group">
@@ -41,8 +46,11 @@ export default function Login() {
                             value={data.password}
                             onChange={(e)=>setData('password',e.target.value)}
                             placeholder="Enter your password"
+                            autoComplete="current-password"
+                            required
+                            aria-invalid={errors.password ? true : undefined}
                         />
-                        {errors.password && (<p className='error'>{errors.password}</p>)}
+                        {errors.password && (<p className='error' role="alert">{errors.password}</p>)}
                     </div>
 
                     <button type="submit" className="btn btn-solid" disabled={processing}>
