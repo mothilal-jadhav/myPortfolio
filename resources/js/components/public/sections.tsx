@@ -48,7 +48,6 @@ export function Hero({ hero, site, nextSectionId }: { hero: HeroData | null; sit
 
     return (
         <section id="welcome-section" className={hero?.image ? 'has-image' : undefined}>
-            {hero?.image && <img className="hero-image" src={hero.image.url} alt="" aria-hidden="true" />}
             <div className="hero-grid" />
             <div className="hero-shape shape-1" />
             <div className="hero-shape shape-2" />

@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { Fragment } from 'react';
 import type { ReactNode } from 'react';
+import GlobalBackground from '../../components/public/GlobalBackground';
 import { useAccentColor, useActiveSection, useReveal } from '../../components/public/hooks';
 import { About, Achievements, Certifications, Contact, Education, Experience, Hero, Projects, Skills } from '../../components/public/sections';
 import { Footer, Navbar } from '../../components/public/SiteChrome';
@@ -71,9 +72,10 @@ export default function Home(props: Props) {
     };
 
     return (
-        <>
+        <div className={`public-site${site.backgroundImage ? ' has-background' : ''}`}>
             <Head title={site.meta.title}>{site.meta.description && <meta head-key="description" name="description" content={site.meta.description} />}</Head>
 
+            <GlobalBackground image={site.backgroundImage} />
             <Navbar site={site} items={navItems} activeId={activeId} />
 
             <main>
@@ -84,6 +86,6 @@ export default function Home(props: Props) {
             </main>
 
             <Footer site={site} socialLinks={socialLinks} email={props.contact?.email} />
-        </>
+        </div>
     );
 }

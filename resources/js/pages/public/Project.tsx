@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import type { CSSProperties } from 'react';
+import GlobalBackground from '../../components/public/GlobalBackground';
 import { useAccentColor } from '../../components/public/hooks';
 import Icon from '../../components/public/Icon';
 import { Footer, Navbar } from '../../components/public/SiteChrome';
@@ -23,11 +24,12 @@ export default function Project({ site, project, socialLinks, preview }: Props) 
         .filter(Boolean);
 
     return (
-        <>
+        <div className={`public-site project-site${site.backgroundImage ? ' has-background' : ''}`}>
             <Head title={`${project.title} · ${site.meta.title}`}>
                 <meta head-key="description" name="description" content={project.description} />
             </Head>
 
+            <GlobalBackground image={site.backgroundImage} />
             <Navbar site={site} items={[{ id: 'welcome-section', label: 'Home' }, { id: 'project-section', label: 'Projects' }]} anchorBase="/" />
 
             <main className="project-page" style={{ '--hue': project.hue } as CSSProperties}>
@@ -103,6 +105,6 @@ export default function Project({ site, project, socialLinks, preview }: Props) 
             </main>
 
             <Footer site={site} socialLinks={socialLinks} />
-        </>
+        </div>
     );
 }

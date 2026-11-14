@@ -72,6 +72,7 @@ export interface CallToAction {
 export interface SiteData {
     title: string | null;
     logo: PublicImage | null;
+    backgroundImage: PublicImage | null;
     accentColor: string | null;
     footerText: string | null;
     footerDescription: string | null;

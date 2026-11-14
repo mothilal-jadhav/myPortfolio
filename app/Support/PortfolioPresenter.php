@@ -121,6 +121,7 @@ class PortfolioPresenter
         return [
             'title' => $settings->site_title ?: $profile->name,
             'logo' => $settings->logo?->toPublicArray((string) ($settings->site_title ?: $profile->name)),
+            'backgroundImage' => $profile->heroImage?->toPublicArray((string) $profile->name),
             'accentColor' => $settings->accent_color,
             'footerText' => $settings->footer_text,
             'footerDescription' => $settings->footer_description,
